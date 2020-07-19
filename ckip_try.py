@@ -183,42 +183,88 @@ def func_ckip(text):
     return ckip_dict
 
 
+def func_jieba(text):
+    '''
+    :param text:
+    :return: word count dict
+    '''
+
+    # fetch stop word list
+    stopword_path = r'./01_ref_data/stopword.txt'
+    stopword_list = []
+    with open(stopword_path, 'r', encoding='utf-8') as f_stop:
+        for temp in f_stop.readlines():
+            stopword_list.append(temp.replace('\n', ''))
+
+    # fetch mydict list
+    jieba.load_userdict(r'./01_ref_data/mydict.txt')
+    s = jieba.cut(text)
+    jieba_word_count = {}
+
+    for i in s:
+        if i in jieba_word_count:
+            jieba_word_count[i] += 1
+        else:
+            jieba_word_count[i] = 1
+    # filter jieba wordcut list by user define
+    jieba_word = [(k, jieba_word_count[k]) for k in jieba_word_count if (len(k) > 1) and (k not in stopword_list) and not re.match(r'[0-9a-zA-Z]+',k)]
+
+    # sort jieba wordcut list
+    jieba_word.sort(key=lambda item: item[1], reverse=True)
+
+    # init jieba wordcut dict
+    jieba_dict = {}
+
+    # insert data to jieba wordcut dict
+    for i in jieba_word:
+        jieba_dict[i[0]] =i [1]
+
+    # return word cut result by dict
+    return jieba_dict
 
 
 
+#
+# x = '''
+# 余致榮不甘願辛苦種得香蕉任人喊價，也認為要做就做最好的，把香蕉產業從一把把進化到一根根。（圖由屏東縣政府提供）
+# 〔記者陳彥廷／屏東報導〕傳統的水果行整把香蕉50元左右，但買回家易過熟，現在小家庭居多，也無法即時吃完，最後丟棄浪費，南州蕉農余致榮搭上輕食風，將香蕉切把分開賣，除了外銷日本，連便利商店也相中好攜帶食用的切把香蕉，市場通路大開。
+# 40歲出頭的余致榮，祖父輩就已開始種香蕉，從小看著香蕉長大，卻曾「討厭」香蕉，後來也當到紡織廠經理，但10年前母親生病，他回家接手，沒想到從此成為興趣，2年前他與通路商合作，將外銷日本的香蕉切把，約5條1小包，到日本就能直接上架，而多的1、2根香蕉則看準小家庭，直送國內的便利超商。
+# 余致榮表示，從2月到6月生產的冬蕉品質最好，也是外銷黃金期，現在一星期外銷一貨櫃，還供量販超市、批發市場等，不但賣綠香蕉也幫客戶摧熟。
+# 余致榮現在有近10公頃蕉田，他說，原本討厭香蕉，現在卻變成他的專業，向香蕉研究所請益後，運用施肥克服連做問題，更解決黃葉病，同一塊地竟能連種4年香蕉，也讓他獲得「施肥達人」頭銜。
+# 余致榮不甘願辛苦種得香蕉任人喊價，也認為要做就做最好的，把香蕉產業從一把把進化到一根根，他認為香蕉市場還有空間，現在他的洗選場成立，一年四季都能供應國內香蕉。
+# 余致榮不甘願辛苦種得香蕉任人喊價，也認為要做就做最好的，把香蕉產業從一把把進化到一根根。（圖由屏東縣政府提供）
+# '''
+#
+#
+#
+#
+#
+#
+#
+#
+#
+# before_ckip = datetime.datetime.now()
+# print(func_ckip(x))
+# after_ckip = datetime.datetime.now()
+# print('spend {}'.format(after_ckip-before_ckip))
+#
+# before_ckip = datetime.datetime.now()
+# print(func_ckip(x))
+# after_ckip = datetime.datetime.now()
+# print('spend {}'.format(after_ckip-before_ckip))
+#
+# before_ckip = datetime.datetime.now()
+# print(func_ckip(x))
+# after_ckip = datetime.datetime.now()
+# print('spend {}'.format(after_ckip-before_ckip))
 
 
-x = '''
-余致榮不甘願辛苦種得香蕉任人喊價，也認為要做就做最好的，把香蕉產業從一把把進化到一根根。（圖由屏東縣政府提供）
-〔記者陳彥廷／屏東報導〕傳統的水果行整把香蕉50元左右，但買回家易過熟，現在小家庭居多，也無法即時吃完，最後丟棄浪費，南州蕉農余致榮搭上輕食風，將香蕉切把分開賣，除了外銷日本，連便利商店也相中好攜帶食用的切把香蕉，市場通路大開。
-40歲出頭的余致榮，祖父輩就已開始種香蕉，從小看著香蕉長大，卻曾「討厭」香蕉，後來也當到紡織廠經理，但10年前母親生病，他回家接手，沒想到從此成為興趣，2年前他與通路商合作，將外銷日本的香蕉切把，約5條1小包，到日本就能直接上架，而多的1、2根香蕉則看準小家庭，直送國內的便利超商。
-余致榮表示，從2月到6月生產的冬蕉品質最好，也是外銷黃金期，現在一星期外銷一貨櫃，還供量販超市、批發市場等，不但賣綠香蕉也幫客戶摧熟。
-余致榮現在有近10公頃蕉田，他說，原本討厭香蕉，現在卻變成他的專業，向香蕉研究所請益後，運用施肥克服連做問題，更解決黃葉病，同一塊地竟能連種4年香蕉，也讓他獲得「施肥達人」頭銜。
-余致榮不甘願辛苦種得香蕉任人喊價，也認為要做就做最好的，把香蕉產業從一把把進化到一根根，他認為香蕉市場還有空間，現在他的洗選場成立，一年四季都能供應國內香蕉。
-余致榮不甘願辛苦種得香蕉任人喊價，也認為要做就做最好的，把香蕉產業從一把把進化到一根根。（圖由屏東縣政府提供）
-'''
+
+t= """
+泰國香蕉外銷以日本、新加坡及香港為主，日本只要頂級品，次級香蕉除了供內銷外，也製成各種加工品，像是炸香蕉，香蕉巧克力和香蕉乾，其中香蕉乾就是將熟成的香蕉，經過日曬而成。"""
 
 
-
-
-
-
-
-
-
-before_ckip = datetime.datetime.now()
-print(func_ckip(x))
-after_ckip = datetime.datetime.now()
-print('spend {}'.format(after_ckip-before_ckip))
-
-before_ckip = datetime.datetime.now()
-print(func_ckip(x))
-after_ckip = datetime.datetime.now()
-print('spend {}'.format(after_ckip-before_ckip))
-
-before_ckip = datetime.datetime.now()
-print(func_ckip(x))
-after_ckip = datetime.datetime.now()
-print('spend {}'.format(after_ckip-before_ckip))
+print(func_ckip(t))
+print(func_jieba(t))
 
 

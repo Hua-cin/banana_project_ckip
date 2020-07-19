@@ -111,7 +111,7 @@ def load_news_data():
         # 保存文章詞彙頻率
         training_set_tf[news['title']] = seg_content
         # 獲取關鍵詞
-        keywords.extend(jieba.analyse.extract_tags(news['content'], topK=100))
+        keywords.extend(seg_list)
     # 文章斷詞轉成向量表示
     seg_corpus = list(set(keywords))
     for title in training_set_tf:
